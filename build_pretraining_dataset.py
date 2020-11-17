@@ -119,7 +119,7 @@ class ExampleWriter(object):
 
   def __init__(self, job_id, vocab_file, output_dir, max_seq_length,
                num_jobs, blanks_separate_docs, do_lower_case,
-               num_out_files=1000):
+               num_out_files=5000):
     self._blanks_separate_docs = blanks_separate_docs
     tokenizer = tokenization.FullTokenizer(
         vocab_file=vocab_file,
@@ -214,6 +214,13 @@ def main():
   args = parser.parse_args()
 
   utils.rmkdir(args.output_dir)
+
+  print(args.corpus_dir)
+  print(args.vocab_file)
+  print(args.output_dir)
+  print(args.max_seq_length)
+  print(args.num_processes)
+
   if args.num_processes == 1:
     write_examples(0, args)
   else:
