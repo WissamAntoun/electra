@@ -1,11 +1,11 @@
-#%%
+# coding=utf-8
+
 import argparse
 import os
 import tensorflow as tf
 
 import build_pretraining_dataset
 from model import tokenization
-#%%
 
 class ExampleWriter(object):
   """Writes pre-training examples to disk."""
@@ -39,7 +39,6 @@ class ExampleWriter(object):
   def finish(self):
     self._writer.close()
 
-#%%
 def write_examples(args):
   """A single process creating and writing out pre-processed examples."""
 
