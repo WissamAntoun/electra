@@ -40,21 +40,21 @@ class PretrainingConfig(object):
     self.mask_prob = 0.15  # percent of input tokens to mask out / replace
 
     # optimization
-    self.learning_rate = 5e-4
+    self.learning_rate = 2e-4
     self.lr_decay_power = 1.0  # linear weight decay by default
     self.weight_decay_rate = 0.01
     self.num_warmup_steps = 10000
 
     # training settings
-    self.iterations_per_loop = 200
-    self.save_checkpoints_steps = 1000
-    self.num_train_steps = 1000000
-    self.num_eval_steps = 100
-    self.keep_checkpoint_max = 5 # maximum number of recent checkpoint files to keep;
+    self.iterations_per_loop = 50000
+    self.save_checkpoints_steps = 250000
+    self.num_train_steps = 2000000
+    self.num_eval_steps = 100000
+    self.keep_checkpoint_max = 0 # maximum number of recent checkpoint files to keep;
                                  # change to 0 or None to keep all checkpoints
 
     # model settings
-    self.model_size = "small"  # one of "small", "base", or "large"
+    self.model_size = "base"  # one of "small", "base", or "large"
     # override the default transformer hparams for the provided model size; see
     # modeling.BertConfig for the possible hparams and util.training_utils for
     # the defaults
@@ -62,8 +62,8 @@ class PretrainingConfig(object):
         kwargs["model_hparam_overrides"]
         if "model_hparam_overrides" in kwargs else {})
     self.embedding_size = None  # bert hidden size by default
-    self.vocab_size = 30522  # number of tokens in the vocabulary
-    self.do_lower_case = True  # lowercase the input?
+    self.vocab_size = 64000  # number of tokens in the vocabulary
+    self.do_lower_case = False  # lowercase the input?
 
     # generator settings
     self.uniform_generator = False  # generator is uniform at random
@@ -79,22 +79,22 @@ class PretrainingConfig(object):
     self.temperature = 1.0  # temperature for sampling from generator
 
     # batch sizes
-    self.max_seq_length = 128
-    self.train_batch_size = 128
-    self.eval_batch_size = 128
+    self.max_seq_length = 512
+    self.train_batch_size = 256
+    self.eval_batch_size = 256
 
     # TPU settings
-    self.use_tpu = False
-    self.num_tpu_cores = 1
+    self.use_tpu = True
+    self.num_tpu_cores = 8
     self.tpu_job_name = None
-    self.tpu_name = None  # cloud TPU to use for training
-    self.tpu_zone = None  # GCE zone where the Cloud TPU is located in
-    self.gcp_project = None  # project name for the Cloud TPU-enabled project
+    self.tpu_name = "electra"  # cloud TPU to use for training
+    self.tpu_zone = "europe-west4-a"  # GCE zone where the Cloud TPU is located in
+    self.gcp_project = "stalwart-poet-289012"  # project name for the Cloud TPU-enabled project
 
     # default locations of data files
     self.pretrain_tfrecords = os.path.join(
-        data_dir, "pretrain_tfrecords/pretrain_data.tfrecord*")
-    self.vocab_file = os.path.join(data_dir, "vocab.txt")
+        data_dir, "pretraining_data/512/*")
+    self.vocab_file = os.path.join(data_dir, "bertvocab_final.txt")
     self.model_dir = os.path.join(data_dir, "models", model_name)
     results_dir = os.path.join(self.model_dir, "results")
     self.results_txt = os.path.join(results_dir, "unsup_results.txt")
@@ -119,17 +119,17 @@ class PretrainingConfig(object):
       self.embedding_size = 128
     # Here are the hyperparameters we used for larger models; see Table 6 in the
     # paper for the full hyperparameters
-    # else:
-    #   self.max_seq_length = 512
-    #   self.learning_rate = 2e-4
-    #   if self.model_size == "base":
-    #     self.embedding_size = 768
-    #     self.generator_hidden_size = 0.33333
-    #     self.train_batch_size = 256
-    #   else:
-    #     self.embedding_size = 1024
-    #     self.mask_prob = 0.25
-    #     self.train_batch_size = 2048
+    else:
+      self.max_seq_length = 512
+      self.learning_rate = 2e-4
+      if self.model_size == "base":
+        self.embedding_size = 768
+        self.generator_hidden_size = 0.33333
+        self.train_batch_size = 256
+      else:
+        self.embedding_size = 1024
+        self.mask_prob = 0.25
+        self.train_batch_size = 2048
     if self.electric_objective:
       self.two_tower_generator = True  # electric requires a two-tower generator
 
