@@ -46,10 +46,10 @@ class PretrainingConfig(object):
     self.num_warmup_steps = 10000
 
     # training settings
-    self.iterations_per_loop = 50000
-    self.save_checkpoints_steps = 250000
+    self.iterations_per_loop = 5000
+    self.save_checkpoints_steps = 25000
     self.num_train_steps = 2000000
-    self.num_eval_steps = 100000
+    self.num_eval_steps = 10000
     self.keep_checkpoint_max = 0 # maximum number of recent checkpoint files to keep;
                                  # change to 0 or None to keep all checkpoints
 
