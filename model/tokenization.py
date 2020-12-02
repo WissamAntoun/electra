@@ -341,6 +341,11 @@ def _is_punctuation(char):
   # Characters such as "^", "$", and "`" are not in the Unicode
   # Punctuation class but we treat them as punctuation anyways, for
   # consistency.
+  if (
+        cp == 91 or cp == 93 or cp == 43
+  ):  # [ and ] are not punctuation since they are used in [xx] and the +
+        return False
+
   if ((cp >= 33 and cp <= 47) or (cp >= 58 and cp <= 64) or
       (cp >= 91 and cp <= 96) or (cp >= 123 and cp <= 126)):
     return True
